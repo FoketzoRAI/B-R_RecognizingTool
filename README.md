@@ -13,7 +13,7 @@
    `pip install psycopg2 django`
 5. Change your settings according to your PostgreSQL:
     1. Open *settings.py*
-    2. Find ***DATABASE*** variable
+    2. Find ***DATABASES*** variable
     3. Change it:
 ~~~python
 DATABASES = {
