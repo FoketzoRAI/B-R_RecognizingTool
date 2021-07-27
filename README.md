@@ -10,24 +10,22 @@
     1. For Windows: `venv\Scripts\activate`
     2. For Linux: `source venv/bin/activate`
 4. Install package dependencies:<br>
-   `pip install psycopg2 django`
+   `pip install psycopg2 django python-decouple`
 5. Change your settings according to your PostgreSQL:
-    1. Open *settings.py*
-    2. Find ***DATABASES*** variable
-    3. Change it:
-~~~python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'name_of_database_in_PSQL',
-        'USER' : 'user_in_PSQL',
-        'PASSWORD' : 'user_password_in_PSQL',
-        'HOST' : 'localhost',
-        'PORT' : '5432',
-    }
-}       
+    1. Copy *.env.example*
+    2. Rename the copy to *.env* & open it
+    3. Change it according to yours PSQL settings:
+~~~ini
+SECRET_KEY=django-insecure-w^!tc%%r-*^^)=%m9rf^$kt57piph))(l)f0%rbzg5bysr$6l0
+
+DB_CONNECTION=django.db.backends.postgresql_psycopg2
+DB_HOST=localhost
+DB_PORT=5432
+DB_DATABASE=database_name_in_PSQL
+DB_USERNAME=username
+DB_PASSWORD=password
 ~~~
-6. Set up your DB to PSQL by these commands:
+6. Set up your DB into PSQL by these commands:
     1. `py manage.py makemigrations` - saving initial migrations
     2. `py manage.py migrate` - sending migrations to DB
     3. `py manage.py createsuperuser` - create Administrator.
