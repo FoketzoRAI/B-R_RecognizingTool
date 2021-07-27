@@ -1,4 +1,3 @@
 /venv
 /.idea
-.ini
-.ini.*
+.env
