@@ -15,6 +15,13 @@ from .utils import *
 
 def index(request):
     return render(request, 'main.html')
+
+def markup(request):
+    return render(request, 'markup.html')
+
+def checkup(request):
+    return render(request, 'checkup.html')
+
 #
 #
 # def login(request):
