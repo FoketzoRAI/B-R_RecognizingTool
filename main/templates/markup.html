@@ -1,14 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>markup</title>
-</head>
-<body>
-    <form method="post">
-        {% csrf_token %}
-        <input type="text"><br>
-        <button type="submit">submit</button>
-    </form>
-</body>
-</html>
+{% extends 'layouts/base.html' %}
+
+{% block Title %}
+    markup
+{% endblock Title %}
+
+{% block Content %}
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <select>
+                <option>английский</option>
+                <option>японский</option>
+            </select><br><br>
+            <textarea name="description"></textarea><br><br>
+            <fieldset>
+
+                <div>
+                    <input type="checkbox" id="double" name="double">
+                    <label class="me-2" for="double">double</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="king" name="king">
+                    <label class="me-2" for="king">king</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="other" name="other">
+                    <label class="me-2" for="other">other</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="queen" name="queen">
+                    <label class="me-2" for="queen">queen</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="twin" name="twin">
+                    <label class="me-2" for="twin">twin</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="single" name="single">
+                    <label class="me-2" for="single">single</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="undefined" name="undefined">
+                    <label class="me-2" for="undefined">undefined</label>
+                </div>
+
+            </fieldset>
+
+            <button type="submit">submit</button>
+        </form>
+    </div>
+{% endblock Content %}
