@@ -11,7 +11,7 @@ class LanguageAdmin(admin.ModelAdmin):
 
 class BedroomAdmin(admin.ModelAdmin):
     ''' Bedroom data on admin page '''
-    list_display = ('id', 'language', 'description', 'keywords')
+    list_display = ('id', 'language', 'keywords', 'description')
     list_display_links = ('id',)
     search_fields = ('description', 'keywords')
 

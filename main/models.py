@@ -19,10 +19,11 @@ class Language(models.Model):
 
 class Bedroom(models.Model):
     language = models.ForeignKey('Language', on_delete=models.PROTECT, null=True, verbose_name="Язык")
-    description = models.TextField(verbose_name="Описание")
     keywords = models.CharField(max_length=255, blank=True, verbose_name="Ключевые слова")
+    description = models.TextField(verbose_name="Описание")
 
     class Meta:
         ''' Model settings '''
         verbose_name = 'Спальня'
         verbose_name_plural = 'Спальни'
+        ordering = ['id']

@@ -20,6 +20,16 @@ class LoginUserForm(AuthenticationForm):
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 
+class ImportCSVForm(forms.Form):
+    csv = forms.FileField(label='Файл с данными', widget=forms.FileInput(attrs={
+        'accept': '.csv', 'class': 'form-control'
+    }), required=True)
+
+    class Meta:
+        fields = ('csv',)
+
+
+
 class BedroomsForm(forms.ModelForm):
     class Meta:
         model = Bedroom

@@ -1,0 +1,29 @@
+{% extends 'layouts/base.html' %}
+
+{% block Title %}
+    Import data
+{% endblock Title %}
+
+{% block Content %}
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            <div class="row mt-5">
+                <div class="col"></div>
+                <div class="col-5">
+                    <form method="post" class="p-2 border rounded shadow">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <p>
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}: </label>
+                            {{ field }}
+                        </p>
+                        <span class="form-error">{{ field.errors }}</span>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-success w-100">Upload</button>
+                    </form>
+                </div>
+            <div class="col"></div>
+        </div>
+        </form>
+    </div>
+{% endblock Content %}

@@ -17,11 +17,18 @@
               <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'markup' %}">markup</a>
+              <a class="nav-link" aria-current="page" href="{% url 'markup' %}">Markup</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'checkup' %}">checkup</a>
+              <a class="nav-link" aria-current="page" href="{% url 'checkup' %}">Checkup</a>
             </li>
+            {% if request.user.is_authenticated %}
+              {% if user.is_superuser %}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{% url 'upload' %}">Import Data</a>
+              </li>
+              {% endif %}
+            {% endif %}
           </ul>
           <div class="d-flex">
             {% if request.user.is_authenticated %}
