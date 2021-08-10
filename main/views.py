@@ -10,17 +10,30 @@ from django.views.generic import CreateView
 
 from .forms import RegisterUserForm, LoginUserForm, ImportCSVForm
 from .utils import *
-from .models import Language, Bedroom
+from .models import Language, Bedroom, Profile
 
 # Create your views here.
 
 
 def index(request):
+    print("user id: ", request.user.id)
     return render(request, 'main.html')
 
 
 def markup(request):
-    return render(request, 'markup.html')
+    user_id = request.user.id
+    language_pk = Profile.objects.get(pk=user_id).language
+    print(language_pk)
+
+    language_obj = Language.objects.get(pk=language_pk)
+    bedroom_obj = Bedroom.objects.filter(language_id=language_obj.id)
+
+    context = {
+        "language": language_obj,
+        "bedroom": bedroom_obj,
+    }
+
+    return render(request, 'markup.html',context)
 
 
 def checkup(request):
@@ -100,3 +113,4 @@ class LoginUser(DataMixin, LoginView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+

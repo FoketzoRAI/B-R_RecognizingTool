@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Language, Bedroom
+from .models import Language, Bedroom, Profile
 # Register your models here.
 
 
@@ -16,5 +16,12 @@ class BedroomAdmin(admin.ModelAdmin):
     search_fields = ('description', 'keywords')
 
 
+class ProfileAdmin(admin.ModelAdmin):
+    ''' Profile data on admin page '''
+    list_display = ('id', 'user', 'language')
+    list_display_links = ('user',)
+
+
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(Bedroom, BedroomAdmin)
+admin.site.register(Profile, ProfileAdmin)
