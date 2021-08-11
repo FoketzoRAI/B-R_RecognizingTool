@@ -10,7 +10,7 @@ from django.views.generic import CreateView
 
 from .forms import RegisterUserForm, LoginUserForm, ImportCSVForm
 from .utils import *
-from .models import Language, Bedroom, Profile
+from .models import Language, Bedroom, Profile,MarkupRes
 
 # Create your views here.
 
@@ -21,19 +21,35 @@ def index(request):
 
 
 def markup(request):
-    user_id = request.user.id
-    language_pk = Profile.objects.get(pk=user_id).language
-    print(language_pk)
-
-    language_obj = Language.objects.get(pk=language_pk)
-    bedroom_obj = Bedroom.objects.filter(language_id=language_obj.id)
-
+    language = Profile.objects.get(user=request.user).language
+    language_obj = Language.objects.get(pk=language.id)
+    verified = MarkupRes.objects.filter(user=request.user)
+    bedroom_obj = Bedroom.objects.filter(language_id=language_obj.id).order_by('?').first()
+    for obj in verified:
+        if obj.bedroom == bedroom_obj.id:
+            bedroom_obj = Bedroom.objects.filter(language_id=language_obj.id).order_by('?').first()
     context = {
-        "language": language_obj,
         "bedroom": bedroom_obj,
     }
-
     return render(request, 'markup.html',context)
+
+def check(request):
+    print(request.POST)
+    keys = {
+        'double','king', 'other', 'queen', 'twin', 'single', 'undefined'
+    }
+    keywords = ""
+    context = request.POST
+    for key in keys:
+        if key in context:
+            keywords += key+" "
+    mr = MarkupRes()
+    mr.user = request.user
+    mr.bedroom = Bedroom.objects.get(pk=context['bedroom_id'])
+    mr.keywords = keywords.strip()
+    mr.save()
+    return redirect('markup')
+
 
 
 def checkup(request):

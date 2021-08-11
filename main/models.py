@@ -43,3 +43,9 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+
+class MarkupRes(models.Model):
+    user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True,verbose_name="Пользователь")
+    bedroom = models.ForeignKey(Bedroom,on_delete=models.SET_NULL, null=True,verbose_name="Комната")
+    keywords = models.CharField(max_length=255, blank=True, verbose_name="Ключевые слова")

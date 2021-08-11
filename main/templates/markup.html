@@ -6,13 +6,13 @@
 
 {% block Content %}
     <div class="container">
-        <form method="post">
+        <form method="post" action="{% url 'check' %}">
             {% csrf_token %}
             <select>
                 <option>английский</option>
                 <option>японский</option>
             </select><br><br>
-            <textarea name="description"> {{}}</textarea><br><br>
+            <textarea name="description"> {{bedroom.description}}</textarea><br><br>
             <fieldset>
 
                 <div>
@@ -51,7 +51,7 @@
                 </div>
 
             </fieldset>
-
+            <input type="input" name="bedroom_id" value="{{bedroom.id}}">
             <button type="submit">submit</button>
         </form>
     </div>
