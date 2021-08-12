@@ -6,53 +6,55 @@
 
 {% block Content %}
     <div class="container">
-        <form method="post" action="{% url 'check' %}">
-            {% csrf_token %}
-            <select>
-                <option>английский</option>
-                <option>японский</option>
-            </select><br><br>
-            <textarea name="description"> {{bedroom.description}}</textarea><br><br>
-            <fieldset>
+        <div class="row mt-5">
+            <div class="col"></div>
+                <div class="col-5">
+                    <form method="post" action="{% url 'check' %}" class="p-2 border rounded shadow">
+                        {% csrf_token %}
+                        <textarea class="form-control" name="description"> {{bedroom.description}}</textarea><br>
+                        <fieldset>
+                            <div>
+                                <input type="checkbox" id="double" name="double">
+                                <label class="me-2" for="double">double</label>
+                            </div>
 
-                <div>
-                    <input type="checkbox" id="double" name="double">
-                    <label class="me-2" for="double">double</label>
+                            <div>
+                                <input type="checkbox" id="king" name="king">
+                                <label class="me-2" for="king">king</label>
+                            </div>
+
+                            <div>
+                                <input type="checkbox" id="other" name="other">
+                                <label class="me-2" for="other">other</label>
+                            </div>
+
+                            <div>
+                                <input type="checkbox" id="queen" name="queen">
+                                <label class="me-2" for="queen">queen</label>
+                            </div>
+
+                            <div>
+                                <input type="checkbox" id="twin" name="twin">
+                                <label class="me-2" for="twin">twin</label>
+                            </div>
+
+                            <div>
+                                <input type="checkbox" id="single" name="single">
+                                <label class="me-2" for="single">single</label>
+                            </div>
+
+                            <div>
+                                <input type="checkbox" id="undefined" name="undefined">
+                                <label class="me-2" for="undefined">undefined</label>
+                            </div>
+                        </fieldset>
+                        <br>
+                        <input type="hidden" name="bedroom_id" value="{{bedroom.id}}">
+                        <button type="submit" class="btn btn-success w-100">submit</button>
+                    </form>
                 </div>
-
-                <div>
-                    <input type="checkbox" id="king" name="king">
-                    <label class="me-2" for="king">king</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" id="other" name="other">
-                    <label class="me-2" for="other">other</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" id="queen" name="queen">
-                    <label class="me-2" for="queen">queen</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" id="twin" name="twin">
-                    <label class="me-2" for="twin">twin</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" id="single" name="single">
-                    <label class="me-2" for="single">single</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" id="undefined" name="undefined">
-                    <label class="me-2" for="undefined">undefined</label>
-                </div>
-
-            </fieldset>
-            <input type="input" name="bedroom_id" value="{{bedroom.id}}">
-            <button type="submit">submit</button>
-        </form>
+                <div class="col"></div>
+            </div>
+        </div>
     </div>
 {% endblock Content %}
