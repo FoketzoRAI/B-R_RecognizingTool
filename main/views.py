@@ -1,55 +1,71 @@
 import csv
 
 from django.contrib.auth import logout, login
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from .forms import RegisterUserForm, LoginUserForm, ImportCSVForm
-from .utils import *
-from .models import Language, Bedroom, Profile,MarkupRes
+from .utils import DataMixin
+from .models import Language, Bedroom, Profile, MarkupRes
+
 
 # Create your views here.
 
 
 def index(request):
-    print("user id: ", request.user.id)
     return render(request, 'main.html')
 
 
 def markup(request):
-    language = Profile.objects.get(user=request.user).language
-    language_obj = Language.objects.get(pk=language.id)
-    verified = MarkupRes.objects.filter(user=request.user)
-    bedroom_obj = Bedroom.objects.filter(language_id=language_obj.id).order_by('?').first()
-    for obj in verified:
-        if obj.bedroom == bedroom_obj.id:
-            bedroom_obj = Bedroom.objects.filter(language_id=language_obj.id).order_by('?').first()
+    """ Markup view """
+    user_profile = Profile.objects.get(user=request.user)
+
+    if user_profile.language is not None:
+        language_obj = Language.objects.get(pk=user_profile.language)  # Take language object as user profiles language
+    else:  # If user has no profile language - use default language
+        language_obj = Language.objects.get(pk=1)
+
+    checked_bedrooms = MarkupRes.objects.filter(user=request.user)
+    random_bedroom = Bedroom.objects.filter(language_id=language_obj.id).order_by('?').first()
+
+    # Checking random taken bedroom with already viewed bedroom
+    for bedroom in checked_bedrooms:
+        if bedroom.bedroom == random_bedroom.id:
+            # If the bedroom is the same as checked, take another.
+            random_bedroom = Bedroom.objects.filter(language_id=language_obj.id).order_by('?').first()
+
     context = {
-        "bedroom": bedroom_obj,
+        "bedroom": random_bedroom,
     }
-    return render(request, 'markup.html',context)
+
+    return render(request, 'markup.html', context=context)
+
 
 def check(request):
-    print(request.POST)
+    """ Check the user form & detect checked keywords """
+
+    # Possible keywords
     keys = {
-        'double','king', 'other', 'queen', 'twin', 'single', 'undefined'
+        'double', 'king', 'other', 'queen', 'twin', 'single', 'undefined'
     }
-    keywords = ""
-    context = request.POST
+    keywords = ""  # User Keywords
+    form_data_keywords = request.POST
+
+    # Detect added user keywords
     for key in keys:
-        if key in context:
-            keywords += key+" "
+        if key in form_data_keywords:
+            keywords += key + " "
+
+    # Create the Markup result and save it to DB
     mr = MarkupRes()
     mr.user = request.user
-    mr.bedroom = Bedroom.objects.get(pk=context['bedroom_id'])
+    mr.bedroom = Bedroom.objects.get(pk=form_data_keywords['bedroom_id'])
     mr.keywords = keywords.strip()
     mr.save()
-    return redirect('markup')
 
+    return redirect('markup')
 
 
 def checkup(request):
@@ -65,20 +81,23 @@ def upload(request):
     # POST
 
     results = []  # Whole data
-    langs = []  # Existing languages in file
+    languages = []  # Existing languages in file
 
     decoded_file = request.FILES['csv'].read().decode('utf-8').splitlines()
     reader = csv.DictReader(decoded_file)
+
+    # Load data from decoded .csv and detect languages
     for row in reader:
         results.append(row)
-        if row['language'] not in langs:
-            langs.append(row['language'])
+        if row['language'] not in languages:
+            languages.append(row['language'])
 
     # Creating language_key : Language_object_in_db dictionary
     lang_key_obj = {}
-    for lang in langs:
-        lang_key_obj[lang] = Language.objects.create(name=lang)
+    for language in languages:
+        lang_key_obj[language] = Language.objects.create(name=language)
 
+    # Loading Bedroom data results into DB
     for row in results:
         new_bedroom = Bedroom()
         new_bedroom.description = row['description']
@@ -86,15 +105,8 @@ def upload(request):
         new_bedroom.language = lang_key_obj[row['language']]
         new_bedroom.save()
 
-    return HttpResponse('Data Added!')
-#
-#
-# def login(request):
-#     return HttpResponse("Login")
-#
-#
-# def register(request):
-#     return HttpResponse("Register")
+    # On complete redirect to main page
+    return redirect('home')
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -104,7 +116,7 @@ class RegisterUser(DataMixin, CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Registarion")
+        c_def = self.get_user_context(title="Registration")
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
@@ -118,15 +130,15 @@ class LoginUser(DataMixin, LoginView):
     template_name = 'auth/login.html'
 
     def get_success_url(self):
+        """ On successful login """
         return reverse_lazy('home')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Autorisation")
+        c_def = self.get_user_context(title="Authorisation")
         return dict(list(context.items()) + list(c_def.items()))
 
 
 def logout_user(request):
     logout(request)
     return redirect('home')
-
