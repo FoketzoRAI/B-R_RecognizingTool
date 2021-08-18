@@ -2,6 +2,7 @@ import csv
 
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -20,6 +21,8 @@ def index(request):
 
 def markup(request):
     """ Markup view """
+    if not request.user.is_authenticated:
+        raise PermissionDenied
     user_profile = Profile.objects.get(user=request.user)
 
     if user_profile.language is not None:
@@ -45,7 +48,8 @@ def markup(request):
 
 def check(request):
     """ Check the user form & detect checked keywords """
-
+    if not request.user.is_authenticated:
+        raise PermissionDenied
     # Possible keywords
     keys = {
         'double', 'king', 'other', 'queen', 'twin', 'single', 'undefined'
@@ -69,10 +73,14 @@ def check(request):
 
 
 def checkup(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
     return render(request, 'checkup.html')
 
 
 def upload(request):
+    if not request.user.is_staff:
+        raise PermissionDenied
     context = {}
 
     if request.method == 'GET':
