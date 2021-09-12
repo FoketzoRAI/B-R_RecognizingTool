@@ -6,6 +6,8 @@
 2. Create *virtual environment* **(venv)**:
     1. For Windows: `py -m venv venv`
     2. For Linux: `python3 -m venv venv`
+    3. Or via PyCharm: `Settings` - `Project` - `Python Interpreter` - `'Gear button'` -
+      `Add...` - `Choose your interpreter` - Ok
 3. Activate venv:
     1. For Windows: `venv\Scripts\activate`
     2. For Linux: `source venv/bin/activate`
